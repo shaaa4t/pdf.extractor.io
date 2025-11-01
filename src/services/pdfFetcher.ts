@@ -2,22 +2,35 @@
  * Service for fetching PDF files from URLs
  */
 
+// CORS proxy services (public proxies - use with caution for sensitive data)
+const CORS_PROXIES = [
+  'https://corsproxy.io/?',
+  'https://api.allorigins.win/raw?url=',
+];
+
 export interface FetchProgress {
   loaded: number;
   total: number;
   percentage: number;
 }
 
+export interface FetchOptions {
+  onProgress?: (progress: FetchProgress) => void;
+  useProxy?: boolean;
+  proxyIndex?: number;
+}
+
 /**
  * Fetches a PDF from a URL and converts it to a File object
  * @param url - The URL of the PDF to fetch
- * @param onProgress - Optional callback for progress updates
+ * @param options - Fetch options including progress callback and proxy settings
  * @returns Promise<File> - The fetched PDF as a File object
  */
 export const fetchPdfFromUrl = async (
   url: string,
-  onProgress?: (progress: FetchProgress) => void
+  options: FetchOptions = {}
 ): Promise<File> => {
+  const { onProgress, useProxy = false, proxyIndex = 0 } = options;
   // Validate URL format
   try {
     new URL(url);
@@ -26,7 +39,12 @@ export const fetchPdfFromUrl = async (
   }
 
   try {
-    const response = await fetch(url);
+    // Construct the fetch URL (with or without proxy)
+    const fetchUrl = useProxy
+      ? `${CORS_PROXIES[proxyIndex]}${encodeURIComponent(url)}`
+      : url;
+
+    const response = await fetch(fetchUrl);
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -94,11 +112,17 @@ export const fetchPdfFromUrl = async (
 
     return file;
   } catch (error) {
-    // Handle network errors
+    // Handle network errors (likely CORS)
     if (error instanceof TypeError) {
-      throw new Error(
-        'Network error. This may be due to CORS restrictions. Try downloading the PDF and uploading it directly.'
-      );
+      if (useProxy) {
+        throw new Error(
+          'Failed to fetch PDF even with proxy. Try downloading the PDF and uploading it directly.'
+        );
+      } else {
+        throw new Error(
+          'CORS_ERROR' // Special error code to trigger proxy suggestion in UI
+        );
+      }
     }
 
     // Re-throw our custom errors

@@ -2,12 +2,10 @@ import { Lesson } from '../types';
 import * as pdfjsLib from 'pdfjs-dist';
 import { PDFDocument } from 'pdf-lib';
 import JSZip from 'jszip';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.js?url';
 
 // Set the workerSrc for pdfjs-dist. This is crucial for it to work with bundlers like Vite.
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.js',
-  import.meta.url,
-).toString();
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 
 const THUMBNAIL_SCALE = 0.4;

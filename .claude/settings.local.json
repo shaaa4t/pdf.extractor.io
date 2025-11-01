@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFeature: Add direct PDF URL loading with tabs and progress indicators\n\nAdded ability to load PDFs directly from URLs without downloading:\n- Created pdfFetcher service to fetch and convert PDFs from URLs\n- Updated FileUpload component with tab interface (Upload/URL)\n- Added progress bar for URL fetch operations\n- Implemented comprehensive error handling for CORS, invalid URLs, etc.\n- Maintained backward compatibility with existing file upload flow\n\nUsers can now choose between:\n1. Upload File tab - Traditional file upload with drag-and-drop\n2. Load from URL tab - Paste a direct PDF link to load instantly\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

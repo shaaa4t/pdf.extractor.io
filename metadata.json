@@ -1,0 +1,5 @@
+{
+  "name": "PDF Lesson Extractor",
+  "description": "An interactive tool to upload a PDF, visually select pages to group them into 'lessons', and download each lesson as a separate PDF file, conveniently bundled into a single ZIP archive.",
+  "requestFramePermissions": []
+}
